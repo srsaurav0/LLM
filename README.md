@@ -25,6 +25,8 @@ docker exec -it django_web python manage.py rewrite_hotels
 
 docker exec -it django_web python manage.py generate_summaries
 
+docker exec -it django_web python manage.py generate_ratings_reviews
+
 
 docker exec -it ollama bash
 
@@ -35,3 +37,35 @@ API Key: AIzaSyDw-28lH3PIJ-PHaHAhU7qZM3HveJJzftM
 
 select * from hotels;
 select * from new_hotels;
+
+
+git clone https://github.com/srsaurav0/LLM.git
+
+cd LLM
+
+python3 -m venv .venv
+source .venv/bin/activate
+
+docker-compose up --build
+
+docker exec -it django_web python manage.py copy_hotel_data
+docker exec -it django_web python manage.py rewrite_hotels
+docker exec -it django_web python manage.py generate_summaries
+docker exec -it django_web python manage.py generate_ratings_reviews
+
+localhost:5050
+
+Email Address / Username: admin@admin.com
+Password: admin
+
+Servers > Right click > Register > Server
+General > Name > LLM
+Connection > Host name/address > postgres_db
+Username > user
+Password > password
+Save
+
+Servers > LLM >
+
+docker exec -it django_web python manage.py test
+

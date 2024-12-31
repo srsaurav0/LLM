@@ -15,7 +15,7 @@ class Command(BaseCommand):
             prompt = (
                 f"Write a summary for the following hotel:\n"
                 f"Name: {hotel.name}\n"
-                f"Location: {hotel.location}\n"
+                f"Location: {hotel.city_name}\n"
                 f"Details: {hotel.description}\n"
             )
 
@@ -27,6 +27,7 @@ class Command(BaseCommand):
                     # Save the new summary in the database
                     HotelSummary.objects.create(
                         hotel=hotel,
+                        property_id=hotel.property_id,
                         summary=response["summary"]
                     )
                     self.stdout.write(

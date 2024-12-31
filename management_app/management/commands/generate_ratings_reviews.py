@@ -27,6 +27,7 @@ class Command(BaseCommand):
                     # Save the new rating and review in the database
                     HotelRatingReview.objects.create(
                         hotel=hotel,
+                        property_id=hotel.property_id,
                         rating=response["rating"],
                         review=response["review"]
                     )

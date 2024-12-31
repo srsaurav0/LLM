@@ -50,9 +50,9 @@ class HotelSummary(models.Model):
     hotel = models.OneToOneField(
         NewHotel,
         on_delete=models.CASCADE,
-        primary_key=True,  # Make this the primary key
-        db_column='property_id'  # Explicitly map it to the `hotel_id` field
+        primary_key=True,  # The primary key is still tied to this table
     )
+    property_id = models.IntegerField()
     summary = models.TextField()
 
     class Meta:
@@ -63,9 +63,9 @@ class HotelRatingReview(models.Model):
     hotel = models.OneToOneField(
         NewHotel,
         on_delete=models.CASCADE,
-        primary_key=True,  # Make this the primary key
-        db_column='property_id'  # Explicitly map it to the `hotel_id` field
+        primary_key=True,  # The primary key is still tied to this table
     )
+    property_id = models.IntegerField()
     rating = models.DecimalField(max_digits=3, decimal_places=2)
     review = models.TextField()
 

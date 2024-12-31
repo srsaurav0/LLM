@@ -24,8 +24,6 @@ def query_gemini_api(prompt):
         print(response.json())
         if response.status_code == 200:
             data = response.json()
-            # Debugging: Print the full response
-            print(data)
 
             # Extract the content text from the response
             text = data.get("candidates", [{}])[0].get("content", {}).get("parts", [{}])[0].get("text", "")
@@ -36,11 +34,13 @@ def query_gemini_api(prompt):
 
             if "**Name:**" in text and "**Description:**" in text:
                 name_start = text.find("**Name:**") + len("**Name:**")
-                description_start = text.find("**Description:**") + len("**Description:**")
-
-                # Extract and clean up the name and description
+                description_start = text.find("**Description:**")
+                
+                # Extract and clean the name
                 name = text[name_start:description_start].strip()
-                description = text[description_start:].strip()
+                
+                # Extract and clean the description
+                description = text[description_start + len("**Description:**"):].strip()
 
             return {
                 "name": name,
@@ -74,7 +74,8 @@ def query_gemini_summary(prompt):
     try:
         time.sleep(2)  # Add delay to avoid hitting API rate limits
         response = requests.post(url, json=payload, headers=headers)
-        print(response.json())  # Debug: Print the full response
+        print(response.json())
+        print("Hello")
         if response.status_code == 200:
             data = response.json()
 
