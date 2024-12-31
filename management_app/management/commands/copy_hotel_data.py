@@ -2,9 +2,13 @@ from django.core.management.base import BaseCommand
 from management_app.models import Hotel, NewHotel
 
 class Command(BaseCommand):
-    help = 'Copy data from hotels to new_hotels'
+    help = 'Replace data in new_hotels with data from hotels'
 
     def handle(self, *args, **kwargs):
+        # Clear the new_hotels table
+        NewHotel.objects.all().delete()
+
+        # Copy data from hotels to new_hotels
         hotels = Hotel.objects.all()
         for hotel in hotels:
             NewHotel.objects.create(
@@ -21,4 +25,5 @@ class Command(BaseCommand):
                 city_id=hotel.city_id,
                 city_name=hotel.city_name,
             )
-        self.stdout.write(self.style.SUCCESS("Data copied successfully to new_hotels!"))
+
+        self.stdout.write(self.style.SUCCESS("Data replaced successfully in new_hotels!"))

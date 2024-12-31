@@ -45,3 +45,30 @@ class NewHotel(models.Model):
     class Meta:
         db_table = 'new_hotels'  # Specify the new table name
         managed = True  # Let Django manage this table
+
+class HotelSummary(models.Model):
+    hotel = models.OneToOneField(
+        NewHotel,
+        on_delete=models.CASCADE,
+        primary_key=True,  # Make this the primary key
+        db_column='property_id'  # Explicitly map it to the `hotel_id` field
+    )
+    summary = models.TextField()
+
+    class Meta:
+        db_table = 'hotel_summaries'
+
+
+class HotelRatingReview(models.Model):
+    hotel = models.OneToOneField(
+        NewHotel,
+        on_delete=models.CASCADE,
+        primary_key=True,  # Make this the primary key
+        db_column='property_id'  # Explicitly map it to the `hotel_id` field
+    )
+    rating = models.DecimalField(max_digits=3, decimal_places=2)
+    review = models.TextField()
+
+    class Meta:
+        db_table = 'hotel_ratings_reviews'
+
