@@ -10,7 +10,7 @@ class Command(BaseCommand):
         hotels = NewHotel.objects.all()
         for hotel in hotels:
             # Remove old ratings and reviews if they exist
-            HotelRatingReview.objects.filter(hotel=hotel).delete()
+            HotelRatingReview.objects.filter(property_id=hotel.property_id).delete()
 
             # Create the prompt for the API
             prompt = (
@@ -31,7 +31,6 @@ class Command(BaseCommand):
                 try:
                     # Save the new rating and review in the database
                     HotelRatingReview.objects.create(
-                        hotel=hotel,
                         property_id=hotel.property_id,
                         rating=response["rating"],
                         review=response["review"],

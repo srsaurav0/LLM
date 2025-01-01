@@ -9,6 +9,8 @@ services:
       - DATABASE_URL=postgresql://user:password@postgres_db:5432/hotels_db
     networks:
       - shared_network
+    ports:
+      - "8000:8000"
     command: >
       sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
 
@@ -22,18 +24,6 @@ services:
       - "5050:80"
     networks:
       - shared_network
-
-  # ollama:
-  #   image: ollama/ollama:latest
-  #   container_name: ollama
-  #   ports:
-  #     - "11434:11434"
-  #   volumes:
-  #     - ./ollama:/root/.ollama
-  #   restart: unless-stopped
-  #   command: serve
-  #   networks:
-  #     - shared_network
 
 volumes:
   postgres_data:

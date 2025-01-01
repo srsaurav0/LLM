@@ -10,7 +10,7 @@ class Command(BaseCommand):
         hotels = NewHotel.objects.all()
         for hotel in hotels:
             # Remove old summary if it exists
-            HotelSummary.objects.filter(hotel=hotel).delete()
+            HotelSummary.objects.filter(property_id=hotel.property_id).delete()
 
             # Create the prompt for the API
             prompt = (
@@ -27,7 +27,6 @@ class Command(BaseCommand):
                 try:
                     # Save the new summary in the database
                     HotelSummary.objects.create(
-                        hotel=hotel,
                         property_id=hotel.property_id,
                         summary=response["summary"],
                     )

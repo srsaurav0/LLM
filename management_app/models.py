@@ -50,27 +50,19 @@ class NewHotel(models.Model):
 
 
 class HotelSummary(models.Model):
-    hotel = models.OneToOneField(
-        NewHotel,
-        on_delete=models.CASCADE,
-        primary_key=True,  # The primary key is still tied to this table
-    )
-    property_id = models.IntegerField()
-    summary = models.TextField()
+    id = models.AutoField(primary_key=True)  # Auto-incremented primary key
+    property_id = models.IntegerField()  # Stores the ID of the related property
+    summary = models.TextField()  # Stores the summary of the hotel
 
     class Meta:
         db_table = "hotel_summaries"
 
 
 class HotelRatingReview(models.Model):
-    hotel = models.OneToOneField(
-        NewHotel,
-        on_delete=models.CASCADE,
-        primary_key=True,  # The primary key is still tied to this table
-    )
-    property_id = models.IntegerField()
-    rating = models.DecimalField(max_digits=3, decimal_places=2)
-    review = models.TextField()
+    id = models.AutoField(primary_key=True)  # Auto-incremented primary key
+    property_id = models.IntegerField()  # Stores the ID of the related property
+    rating = models.DecimalField(max_digits=3, decimal_places=2)  # Stores the rating (0.00 to 999.99)
+    review = models.TextField()  # Stores the review text
 
     class Meta:
         db_table = "hotel_ratings_reviews"
