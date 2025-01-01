@@ -107,7 +107,7 @@ docker-compose up --build
 - Open another terminal in the parent directory and run the following command:
 ```bash
 git clone https://github.com/srsaurav0/LLM.git
-cd cd LLM
+cd LLM
 ```
 
 ### **5. Create and Activate a Virtual Environment for this Project**
