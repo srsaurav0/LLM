@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 from management_app.models import NewHotel
 from management_app.utils import query_gemini_api
 
+
 class Command(BaseCommand):
     help = "Rewrite name and description using Google AI Studio API"
 

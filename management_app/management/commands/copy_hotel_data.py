@@ -1,8 +1,9 @@
 from django.core.management.base import BaseCommand
 from management_app.models import Hotel, NewHotel
 
+
 class Command(BaseCommand):
-    help = 'Replace data in new_hotels with data from hotels'
+    help = "Replace data in new_hotels with data from hotels"
 
     def handle(self, *args, **kwargs):
         # Clear the new_hotels table
@@ -14,7 +15,7 @@ class Command(BaseCommand):
             NewHotel.objects.create(
                 property_id=hotel.property_id,
                 name=hotel.name,
-                description='',  # Initialize with an empty description
+                description="",  # Initialize with an empty description
                 rating=hotel.rating,
                 location=hotel.location,
                 latitude=hotel.latitude,
@@ -26,4 +27,6 @@ class Command(BaseCommand):
                 city_name=hotel.city_name,
             )
 
-        self.stdout.write(self.style.SUCCESS("Data replaced successfully in new_hotels!"))
+        self.stdout.write(
+            self.style.SUCCESS("Data replaced successfully in new_hotels!")
+        )

@@ -1,11 +1,12 @@
 from django.db import models
 
+
 class City(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=255)
 
     class Meta:
-        db_table = 'cities'  # Link to the existing 'cities' table
+        db_table = "cities"  # Link to the existing 'cities' table
         managed = False  # Prevent Django from modifying this table
 
 
@@ -24,8 +25,9 @@ class Hotel(models.Model):
     city_name = models.CharField(max_length=255)
 
     class Meta:
-        db_table = 'hotels'  # Link to the existing 'hotels' table
+        db_table = "hotels"  # Link to the existing 'hotels' table
         managed = False  # Prevent Django from modifying this table
+
 
 class NewHotel(models.Model):
     id = models.AutoField(primary_key=True)  # Auto-increment ID for the new table
@@ -43,8 +45,9 @@ class NewHotel(models.Model):
     city_name = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
-        db_table = 'new_hotels'  # Specify the new table name
+        db_table = "new_hotels"  # Specify the new table name
         managed = True  # Let Django manage this table
+
 
 class HotelSummary(models.Model):
     hotel = models.OneToOneField(
@@ -56,7 +59,7 @@ class HotelSummary(models.Model):
     summary = models.TextField()
 
     class Meta:
-        db_table = 'hotel_summaries'
+        db_table = "hotel_summaries"
 
 
 class HotelRatingReview(models.Model):
@@ -70,5 +73,4 @@ class HotelRatingReview(models.Model):
     review = models.TextField()
 
     class Meta:
-        db_table = 'hotel_ratings_reviews'
-
+        db_table = "hotel_ratings_reviews"

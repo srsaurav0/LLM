@@ -1,88 +1,97 @@
 from django.test import TestCase
-from management_app.models import City, Hotel, NewHotel, HotelSummary, HotelRatingReview
+from management_app.models import NewHotel, HotelSummary, HotelRatingReview
 from unittest.mock import patch
-from management_app.utils import query_gemini_api, query_gemini_summary, query_gemini_ratings_reviews
+from management_app.utils import (
+    query_gemini_api,
+    query_gemini_summary,
+    query_gemini_ratings_reviews,
+)
 from django.core.management import call_command
 from django.db import connection
 from decimal import Decimal
 
-# class ModelsTestCase(TestCase):
-#     def setUp(self):
-#         # Create a NewHotel instance
-#         self.new_hotel = NewHotel.objects.create(
-#             property_id=214,
-#             name="Azure Torrent Retreat",
-#             description="A tranquil retreat with ocean views.",
-#             rating=4.5,
-#             location="Teknaf Upazila",
-#             latitude=21.366,
-#             longitude=92.2,
-#             room_type="Deluxe",
-#             price=200.0,
-#             image_path="/images/azure.jpg",
-#             city_id=1,
-#             city_name="Teknaf"
-#         )
 
-#     def test_new_hotel_creation(self):
-#         # Verify the NewHotel instance was created successfully
-#         hotel = NewHotel.objects.get(property_id=214)
-#         self.assertEqual(hotel.name, "Azure Torrent Retreat")
-#         self.assertEqual(hotel.city_name, "Teknaf")
-#         self.assertEqual(hotel.rating, 4.5)
+class ModelsTestCase(TestCase):
+    def setUp(self):
+        # Create a NewHotel instance
+        self.new_hotel = NewHotel.objects.create(
+            property_id=214,
+            name="Azure Torrent Retreat",
+            description="A tranquil retreat with ocean views.",
+            rating=4.5,
+            location="Teknaf Upazila",
+            latitude=21.366,
+            longitude=92.2,
+            room_type="Deluxe",
+            price=200.0,
+            image_path="/images/azure.jpg",
+            city_id=1,
+            city_name="Teknaf",
+        )
 
-#     def test_hotel_summary_creation(self):
-#         # Create a HotelSummary for the NewHotel
-#         summary = HotelSummary.objects.create(
-#             hotel=self.new_hotel,
-#             property_id=self.new_hotel.property_id,
-#             summary="A beautiful retreat offering stunning views."
-#         )
+    def test_new_hotel_creation(self):
+        # Verify the NewHotel instance was created successfully
+        hotel = NewHotel.objects.get(property_id=214)
+        self.assertEqual(hotel.name, "Azure Torrent Retreat")
+        self.assertEqual(hotel.city_name, "Teknaf")
+        self.assertEqual(hotel.rating, 4.5)
 
-#         # Verify the summary was created and linked to the correct hotel
-#         self.assertEqual(summary.hotel, self.new_hotel)
-#         self.assertEqual(summary.property_id, 214)
-#         self.assertEqual(summary.summary, "A beautiful retreat offering stunning views.")
+    def test_hotel_summary_creation(self):
+        # Create a HotelSummary for the NewHotel
+        summary = HotelSummary.objects.create(
+            hotel=self.new_hotel,
+            property_id=self.new_hotel.property_id,
+            summary="A beautiful retreat offering stunning views.",
+        )
 
-#     def test_hotel_rating_review_creation(self):
-#         # Create a HotelRatingReview for the NewHotel
-#         rating_review = HotelRatingReview.objects.create(
-#             hotel=self.new_hotel,
-#             property_id=self.new_hotel.property_id,
-#             rating=4.5,
-#             review="An amazing experience with excellent amenities."
-#         )
+        # Verify the summary was created and linked to the correct hotel
+        self.assertEqual(summary.hotel, self.new_hotel)
+        self.assertEqual(summary.property_id, 214)
+        self.assertEqual(
+            summary.summary, "A beautiful retreat offering stunning views."
+        )
 
-#         # Verify the rating and review were created and linked to the correct hotel
-#         self.assertEqual(rating_review.hotel, self.new_hotel)
-#         self.assertEqual(rating_review.property_id, 214)
-#         self.assertEqual(rating_review.rating, 4.5)
-#         self.assertEqual(rating_review.review, "An amazing experience with excellent amenities.")
+    def test_hotel_rating_review_creation(self):
+        # Create a HotelRatingReview for the NewHotel
+        rating_review = HotelRatingReview.objects.create(
+            hotel=self.new_hotel,
+            property_id=self.new_hotel.property_id,
+            rating=4.5,
+            review="An amazing experience with excellent amenities.",
+        )
 
-#     def test_cascade_deletion(self):
-#         # Create a HotelSummary and HotelRatingReview for the NewHotel
-#         HotelSummary.objects.create(
-#             hotel=self.new_hotel,
-#             property_id=self.new_hotel.property_id,
-#             summary="A beautiful retreat offering stunning views."
-#         )
-#         HotelRatingReview.objects.create(
-#             hotel=self.new_hotel,
-#             property_id=self.new_hotel.property_id,
-#             rating=4.5,
-#             review="An amazing experience with excellent amenities."
-#         )
+        # Verify the rating and review were created and linked to the correct hotel
+        self.assertEqual(rating_review.hotel, self.new_hotel)
+        self.assertEqual(rating_review.property_id, 214)
+        self.assertEqual(rating_review.rating, 4.5)
+        self.assertEqual(
+            rating_review.review, "An amazing experience with excellent amenities."
+        )
 
-#         # Delete the NewHotel instance
-#         self.new_hotel.delete()
+    def test_cascade_deletion(self):
+        # Create a HotelSummary and HotelRatingReview for the NewHotel
+        HotelSummary.objects.create(
+            hotel=self.new_hotel,
+            property_id=self.new_hotel.property_id,
+            summary="A beautiful retreat offering stunning views.",
+        )
+        HotelRatingReview.objects.create(
+            hotel=self.new_hotel,
+            property_id=self.new_hotel.property_id,
+            rating=4.5,
+            review="An amazing experience with excellent amenities.",
+        )
 
-#         # Verify that related HotelSummary and HotelRatingReview instances are also deleted
-#         self.assertFalse(HotelSummary.objects.filter(property_id=214).exists())
-#         self.assertFalse(HotelRatingReview.objects.filter(property_id=214).exists())
+        # Delete the NewHotel instance
+        self.new_hotel.delete()
+
+        # Verify that related HotelSummary and HotelRatingReview instances are also deleted
+        self.assertFalse(HotelSummary.objects.filter(property_id=214).exists())
+        self.assertFalse(HotelRatingReview.objects.filter(property_id=214).exists())
 
 
 class TestGeminiUtils(TestCase):
-    @patch('management_app.utils.requests.post')
+    @patch("management_app.utils.requests.post")
     def test_query_gemini_api_success(self, mock_post):
         # Mock a successful API response
         mock_response = {
@@ -94,9 +103,9 @@ class TestGeminiUtils(TestCase):
                                 "text": "**Name:** Azure Torrent Retreat\n\n**Description:** A tranquil retreat with ocean views."
                             }
                         ],
-                        "role": "model"
+                        "role": "model",
                     },
-                    "finishReason": "STOP"
+                    "finishReason": "STOP",
                 }
             ]
         }
@@ -109,7 +118,7 @@ class TestGeminiUtils(TestCase):
         self.assertEqual(result["name"], "Azure Torrent Retreat")
         self.assertEqual(result["description"], "A tranquil retreat with ocean views.")
 
-    @patch('management_app.utils.requests.post')
+    @patch("management_app.utils.requests.post")
     def test_query_gemini_summary_success(self, mock_post):
         # Mock a successful API response for summary
         mock_response = {
@@ -121,9 +130,9 @@ class TestGeminiUtils(TestCase):
                                 "text": "A beautiful retreat with stunning views and modern amenities."
                             }
                         ],
-                        "role": "model"
+                        "role": "model",
                     },
-                    "finishReason": "STOP"
+                    "finishReason": "STOP",
                 }
             ]
         }
@@ -133,9 +142,12 @@ class TestGeminiUtils(TestCase):
         prompt = "Generate a summary for the following hotel."
         result = query_gemini_summary(prompt)
 
-        self.assertEqual(result["summary"], "A beautiful retreat with stunning views and modern amenities.")
+        self.assertEqual(
+            result["summary"],
+            "A beautiful retreat with stunning views and modern amenities.",
+        )
 
-    @patch('management_app.utils.requests.post')
+    @patch("management_app.utils.requests.post")
     def test_query_gemini_ratings_reviews_success(self, mock_post):
         # Mock a successful API response for ratings and reviews
         mock_response = {
@@ -147,9 +159,9 @@ class TestGeminiUtils(TestCase):
                                 "text": "Rating: 4.5/5\n\nA wonderful stay with excellent service and amenities."
                             }
                         ],
-                        "role": "model"
+                        "role": "model",
                     },
-                    "finishReason": "STOP"
+                    "finishReason": "STOP",
                 }
             ]
         }
@@ -160,9 +172,11 @@ class TestGeminiUtils(TestCase):
         result = query_gemini_ratings_reviews(prompt)
 
         self.assertEqual(result["rating"], 4.5)
-        self.assertEqual(result["review"], "A wonderful stay with excellent service and amenities.")
+        self.assertEqual(
+            result["review"], "A wonderful stay with excellent service and amenities."
+        )
 
-    @patch('management_app.utils.requests.post')
+    @patch("management_app.utils.requests.post")
     def test_query_gemini_api_failure(self, mock_post):
         # Mock a failed API response
         mock_post.return_value.status_code = 400
@@ -173,7 +187,7 @@ class TestGeminiUtils(TestCase):
 
         self.assertIsNone(result)
 
-    @patch('management_app.utils.requests.post')
+    @patch("management_app.utils.requests.post")
     def test_query_gemini_summary_failure(self, mock_post):
         # Mock a failed API response for summary
         mock_post.return_value.status_code = 500
@@ -184,7 +198,7 @@ class TestGeminiUtils(TestCase):
 
         self.assertIsNone(result)
 
-    @patch('management_app.utils.requests.post')
+    @patch("management_app.utils.requests.post")
     def test_query_gemini_ratings_reviews_failure(self, mock_post):
         # Mock a failed API response for ratings and reviews
         mock_post.return_value.status_code = 429
@@ -200,7 +214,8 @@ class CopyHotelDataCommandTest(TestCase):
     def setUp(self):
         # Create the mock `hotels` table manually
         with connection.cursor() as cursor:
-            cursor.execute("""
+            cursor.execute(
+                """
                 CREATE TABLE hotels (
                     id SERIAL PRIMARY KEY,
                     property_id INTEGER NOT NULL,
@@ -215,16 +230,19 @@ class CopyHotelDataCommandTest(TestCase):
                     city_id INTEGER,
                     city_name VARCHAR(255)
                 )
-            """)
+            """
+            )
 
         # Insert test data into the `hotels` table
         with connection.cursor() as cursor:
-            cursor.execute("""
+            cursor.execute(
+                """
                 INSERT INTO hotels (id, property_id, name, rating, location, latitude, longitude, room_type, price, image_path, city_id, city_name)
                 VALUES
                 (1, 101, 'Hotel Alpha', 4.2, 'Location A', 12.34, 56.78, 'Deluxe', 200.0, '/images/hotel_alpha.jpg', 1, 'City A'),
                 (2, 102, 'Hotel Beta', 3.8, 'Location B', 21.43, 65.87, 'Standard', 150.0, '/images/hotel_beta.jpg', 2, 'City B')
-            """)
+            """
+            )
 
         # Add initial data to `new_hotels` (to test replacement)
         NewHotel.objects.create(
@@ -239,7 +257,7 @@ class CopyHotelDataCommandTest(TestCase):
             price=50.0,
             image_path="/images/old_hotel.jpg",
             city_id=999,
-            city_name="Old City"
+            city_name="Old City",
         )
 
     def tearDown(self):
@@ -254,10 +272,12 @@ class CopyHotelDataCommandTest(TestCase):
         self.assertEqual(old_hotel.name, "Old Hotel")
 
         # Run the management command
-        call_command('copy_hotel_data')
+        call_command("copy_hotel_data")
 
         # Validate that `new_hotels` now contains the data from `hotels`
-        self.assertEqual(NewHotel.objects.count(), 2)  # Should match the count in `hotels`
+        self.assertEqual(
+            NewHotel.objects.count(), 2
+        )  # Should match the count in `hotels`
 
         # Check the first record
         new_hotel1 = NewHotel.objects.get(property_id=101)
@@ -287,7 +307,7 @@ class GenerateRatingsReviewsCommandTest(TestCase):
             price=200.0,
             image_path="/images/hotel_alpha.jpg",
             city_id=1,
-            city_name="City A"
+            city_name="City A",
         )
 
         self.hotel2 = NewHotel.objects.create(
@@ -302,19 +322,21 @@ class GenerateRatingsReviewsCommandTest(TestCase):
             price=150.0,
             image_path="/images/hotel_beta.jpg",
             city_id=2,
-            city_name="City B"
+            city_name="City B",
         )
 
-    @patch('management_app.management.commands.generate_ratings_reviews.query_gemini_ratings_reviews')
+    @patch(
+        "management_app.management.commands.generate_ratings_reviews.query_gemini_ratings_reviews"
+    )
     def test_generate_ratings_reviews_success(self, mock_query_gemini_ratings_reviews):
         # Mock the API response for successful rating and review generation
         mock_query_gemini_ratings_reviews.side_effect = [
             {"rating": 4.5, "review": "An amazing experience with excellent service."},
-            {"rating": 3.8, "review": "A great stay with modern facilities."}
+            {"rating": 3.8, "review": "A great stay with modern facilities."},
         ]
 
         # Run the management command
-        call_command('generate_ratings_reviews')
+        call_command("generate_ratings_reviews")
 
         # Verify the ratings and reviews were created in the database
         self.assertEqual(HotelRatingReview.objects.count(), 2)
@@ -323,7 +345,9 @@ class GenerateRatingsReviewsCommandTest(TestCase):
         rating_review1 = HotelRatingReview.objects.get(hotel=self.hotel1)
         self.assertEqual(rating_review1.property_id, 101)
         self.assertEqual(rating_review1.rating, Decimal("4.50"))  # Compare as Decimal
-        self.assertEqual(rating_review1.review, "An amazing experience with excellent service.")
+        self.assertEqual(
+            rating_review1.review, "An amazing experience with excellent service."
+        )
 
         # Validate the second hotel's rating and review
         rating_review2 = HotelRatingReview.objects.get(hotel=self.hotel2)
@@ -331,37 +355,39 @@ class GenerateRatingsReviewsCommandTest(TestCase):
         self.assertEqual(rating_review2.rating, Decimal("3.80"))  # Compare as Decimal
         self.assertEqual(rating_review2.review, "A great stay with modern facilities.")
 
-
-
-    @patch('management_app.management.commands.generate_ratings_reviews.query_gemini_ratings_reviews')
+    @patch(
+        "management_app.management.commands.generate_ratings_reviews.query_gemini_ratings_reviews"
+    )
     def test_generate_ratings_reviews_failure(self, mock_query_gemini_ratings_reviews):
         # Mock the API response for failure (e.g., API error or no response)
         mock_query_gemini_ratings_reviews.return_value = None
 
         # Run the management command
-        call_command('generate_ratings_reviews')
+        call_command("generate_ratings_reviews")
 
         # Verify that no ratings or reviews were created in the database
         self.assertEqual(HotelRatingReview.objects.count(), 0)
 
-    @patch('management_app.management.commands.generate_ratings_reviews.query_gemini_ratings_reviews')
+    @patch(
+        "management_app.management.commands.generate_ratings_reviews.query_gemini_ratings_reviews"
+    )
     def test_replace_existing_ratings_reviews(self, mock_query_gemini_ratings_reviews):
         # Create an existing rating and review for the first hotel
         HotelRatingReview.objects.create(
             hotel=self.hotel1,
             property_id=self.hotel1.property_id,
             rating=3.0,
-            review="An outdated review."
+            review="An outdated review.",
         )
 
         # Mock the API response for updated ratings and reviews
         mock_query_gemini_ratings_reviews.side_effect = [
             {"rating": 4.5, "review": "An amazing experience with excellent service."},
-            {"rating": 3.8, "review": "A great stay with modern facilities."}
+            {"rating": 3.8, "review": "A great stay with modern facilities."},
         ]
 
         # Run the management command
-        call_command('generate_ratings_reviews')
+        call_command("generate_ratings_reviews")
 
         # Verify the ratings and reviews were replaced
         self.assertEqual(HotelRatingReview.objects.count(), 2)
@@ -370,7 +396,10 @@ class GenerateRatingsReviewsCommandTest(TestCase):
         updated_rating_review1 = HotelRatingReview.objects.get(hotel=self.hotel1)
         self.assertEqual(updated_rating_review1.property_id, 101)
         self.assertEqual(updated_rating_review1.rating, 4.5)
-        self.assertEqual(updated_rating_review1.review, "An amazing experience with excellent service.")
+        self.assertEqual(
+            updated_rating_review1.review,
+            "An amazing experience with excellent service.",
+        )
 
 
 class RewriteHotelsCommandTest(TestCase):
@@ -388,7 +417,7 @@ class RewriteHotelsCommandTest(TestCase):
             price=200.0,
             image_path="/images/hotel_alpha.jpg",
             city_id=1,
-            city_name="City A"
+            city_name="City A",
         )
 
         self.hotel2 = NewHotel.objects.create(
@@ -403,56 +432,72 @@ class RewriteHotelsCommandTest(TestCase):
             price=150.0,
             image_path="/images/hotel_beta.jpg",
             city_id=2,
-            city_name="City B"
+            city_name="City B",
         )
 
-    @patch('management_app.management.commands.rewrite_hotels.query_gemini_api')
+    @patch("management_app.management.commands.rewrite_hotels.query_gemini_api")
     def test_rewrite_name_and_description_success(self, mock_query_gemini_api):
         # Mock the API responses for rewriting name and description
         mock_query_gemini_api.side_effect = [
-            {"name": "Alpha Retreat", "description": "A luxurious hotel with breathtaking views."},
-            {"name": "Beta Haven", "description": "An urban escape with modern amenities."}
+            {
+                "name": "Alpha Retreat",
+                "description": "A luxurious hotel with breathtaking views.",
+            },
+            {
+                "name": "Beta Haven",
+                "description": "An urban escape with modern amenities.",
+            },
         ]
 
         # Run the management command
-        call_command('rewrite_hotels')
+        call_command("rewrite_hotels")
 
         # Verify that the names and descriptions were updated in the database
         updated_hotel1 = NewHotel.objects.get(property_id=101)
         self.assertEqual(updated_hotel1.name, "Alpha Retreat")
-        self.assertEqual(updated_hotel1.description, "A luxurious hotel with breathtaking views.")
+        self.assertEqual(
+            updated_hotel1.description, "A luxurious hotel with breathtaking views."
+        )
 
         updated_hotel2 = NewHotel.objects.get(property_id=102)
         self.assertEqual(updated_hotel2.name, "Beta Haven")
-        self.assertEqual(updated_hotel2.description, "An urban escape with modern amenities.")
+        self.assertEqual(
+            updated_hotel2.description, "An urban escape with modern amenities."
+        )
 
-    @patch('management_app.management.commands.rewrite_hotels.query_gemini_api')
+    @patch("management_app.management.commands.rewrite_hotels.query_gemini_api")
     def test_rewrite_name_and_description_partial_success(self, mock_query_gemini_api):
         # Mock the API response to return partial data for one hotel
         mock_query_gemini_api.side_effect = [
             {"name": "Alpha Retreat"},  # No description provided
-            {"description": "An urban escape with modern amenities."}  # No name provided
+            {
+                "description": "An urban escape with modern amenities."
+            },  # No name provided
         ]
 
         # Run the management command
-        call_command('rewrite_hotels')
+        call_command("rewrite_hotels")
 
         # Verify the updates in the database
         updated_hotel1 = NewHotel.objects.get(property_id=101)
         self.assertEqual(updated_hotel1.name, "Alpha Retreat")  # Name updated
-        self.assertEqual(updated_hotel1.description, "A basic hotel description.")  # Description unchanged
+        self.assertEqual(
+            updated_hotel1.description, "A basic hotel description."
+        )  # Description unchanged
 
         updated_hotel2 = NewHotel.objects.get(property_id=102)
         self.assertEqual(updated_hotel2.name, "Hotel Beta")  # Name unchanged
-        self.assertEqual(updated_hotel2.description, "An urban escape with modern amenities.")  # Description updated
+        self.assertEqual(
+            updated_hotel2.description, "An urban escape with modern amenities."
+        )  # Description updated
 
-    @patch('management_app.management.commands.rewrite_hotels.query_gemini_api')
+    @patch("management_app.management.commands.rewrite_hotels.query_gemini_api")
     def test_rewrite_name_and_description_failure(self, mock_query_gemini_api):
         # Mock the API response to simulate failure
         mock_query_gemini_api.return_value = None
 
         # Run the management command
-        call_command('rewrite_hotels')
+        call_command("rewrite_hotels")
 
         # Verify that no changes were made to the database
         unchanged_hotel1 = NewHotel.objects.get(property_id=101)
@@ -461,7 +506,9 @@ class RewriteHotelsCommandTest(TestCase):
 
         unchanged_hotel2 = NewHotel.objects.get(property_id=102)
         self.assertEqual(unchanged_hotel2.name, "Hotel Beta")
-        self.assertEqual(unchanged_hotel2.description, "Another basic hotel description.")
+        self.assertEqual(
+            unchanged_hotel2.description, "Another basic hotel description."
+        )
 
 
 class GenerateSummariesCommandTest(TestCase):
@@ -479,7 +526,7 @@ class GenerateSummariesCommandTest(TestCase):
             price=200.0,
             image_path="/images/hotel_alpha.jpg",
             city_id=1,
-            city_name="City A"
+            city_name="City A",
         )
 
         self.hotel2 = NewHotel.objects.create(
@@ -494,19 +541,23 @@ class GenerateSummariesCommandTest(TestCase):
             price=150.0,
             image_path="/images/hotel_beta.jpg",
             city_id=2,
-            city_name="City B"
+            city_name="City B",
         )
 
-    @patch('management_app.management.commands.generate_summaries.query_gemini_summary')
+    @patch("management_app.management.commands.generate_summaries.query_gemini_summary")
     def test_generate_summaries_success(self, mock_query_gemini_summary):
         # Mock the API responses for generating summaries
         mock_query_gemini_summary.side_effect = [
-            {"summary": "A beautiful retreat offering stunning views and luxurious amenities."},
-            {"summary": "An urban oasis with cutting-edge facilities and top-notch service."}
+            {
+                "summary": "A beautiful retreat offering stunning views and luxurious amenities."
+            },
+            {
+                "summary": "An urban oasis with cutting-edge facilities and top-notch service."
+            },
         ]
 
         # Run the management command
-        call_command('generate_summaries')
+        call_command("generate_summaries")
 
         # Verify that summaries were created in the database
         self.assertEqual(HotelSummary.objects.count(), 2)
@@ -514,59 +565,78 @@ class GenerateSummariesCommandTest(TestCase):
         # Validate the first hotel's summary
         summary1 = HotelSummary.objects.get(hotel=self.hotel1)
         self.assertEqual(summary1.property_id, 101)
-        self.assertEqual(summary1.summary, "A beautiful retreat offering stunning views and luxurious amenities.")
+        self.assertEqual(
+            summary1.summary,
+            "A beautiful retreat offering stunning views and luxurious amenities.",
+        )
 
         # Validate the second hotel's summary
         summary2 = HotelSummary.objects.get(hotel=self.hotel2)
         self.assertEqual(summary2.property_id, 102)
-        self.assertEqual(summary2.summary, "An urban oasis with cutting-edge facilities and top-notch service.")
+        self.assertEqual(
+            summary2.summary,
+            "An urban oasis with cutting-edge facilities and top-notch service.",
+        )
 
-    @patch('management_app.management.commands.generate_summaries.query_gemini_summary')
+    @patch("management_app.management.commands.generate_summaries.query_gemini_summary")
     def test_generate_summaries_partial_success(self, mock_query_gemini_summary):
         # Mock the API response to return a summary for only one hotel
         mock_query_gemini_summary.side_effect = [
-            {"summary": "A beautiful retreat offering stunning views and luxurious amenities."},
-            None  # Simulate failure for the second hotel
+            {
+                "summary": "A beautiful retreat offering stunning views and luxurious amenities."
+            },
+            None,  # Simulate failure for the second hotel
         ]
 
         # Run the management command
-        call_command('generate_summaries')
+        call_command("generate_summaries")
 
         # Verify the first summary was created
         self.assertEqual(HotelSummary.objects.count(), 1)
         summary1 = HotelSummary.objects.get(hotel=self.hotel1)
         self.assertEqual(summary1.property_id, 101)
-        self.assertEqual(summary1.summary, "A beautiful retreat offering stunning views and luxurious amenities.")
+        self.assertEqual(
+            summary1.summary,
+            "A beautiful retreat offering stunning views and luxurious amenities.",
+        )
 
         # Ensure no summary exists for the second hotel
         self.assertFalse(HotelSummary.objects.filter(hotel=self.hotel2).exists())
 
-    @patch('management_app.management.commands.generate_summaries.query_gemini_summary')
+    @patch("management_app.management.commands.generate_summaries.query_gemini_summary")
     def test_replace_existing_summary(self, mock_query_gemini_summary):
         # Create an existing summary for the first hotel
         HotelSummary.objects.create(
             hotel=self.hotel1,
             property_id=self.hotel1.property_id,
-            summary="An outdated summary."
+            summary="An outdated summary.",
         )
 
         # Mock the API responses for updated summaries
         mock_query_gemini_summary.side_effect = [
-            {"summary": "A beautiful retreat offering stunning views and luxurious amenities."},
-            {"summary": "An urban oasis with cutting-edge facilities and top-notch service."}
+            {
+                "summary": "A beautiful retreat offering stunning views and luxurious amenities."
+            },
+            {
+                "summary": "An urban oasis with cutting-edge facilities and top-notch service."
+            },
         ]
 
         # Run the management command
-        call_command('generate_summaries')
+        call_command("generate_summaries")
 
         # Verify that the summary was replaced for the first hotel
         self.assertEqual(HotelSummary.objects.count(), 2)
         updated_summary1 = HotelSummary.objects.get(hotel=self.hotel1)
-        self.assertEqual(updated_summary1.summary, "A beautiful retreat offering stunning views and luxurious amenities.")
+        self.assertEqual(
+            updated_summary1.summary,
+            "A beautiful retreat offering stunning views and luxurious amenities.",
+        )
 
         # Verify the second hotel's summary was created
         summary2 = HotelSummary.objects.get(hotel=self.hotel2)
         self.assertEqual(summary2.property_id, 102)
-        self.assertEqual(summary2.summary, "An urban oasis with cutting-edge facilities and top-notch service.")
-
-
+        self.assertEqual(
+            summary2.summary,
+            "An urban oasis with cutting-edge facilities and top-notch service.",
+        )

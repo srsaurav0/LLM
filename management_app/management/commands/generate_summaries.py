@@ -2,8 +2,9 @@ from django.core.management.base import BaseCommand
 from management_app.models import NewHotel, HotelSummary
 from management_app.utils import query_gemini_summary
 
+
 class Command(BaseCommand):
-    help = 'Generate summaries for hotels'
+    help = "Generate summaries for hotels"
 
     def handle(self, *args, **kwargs):
         hotels = NewHotel.objects.all()
@@ -28,12 +29,14 @@ class Command(BaseCommand):
                     HotelSummary.objects.create(
                         hotel=hotel,
                         property_id=hotel.property_id,
-                        summary=response["summary"]
+                        summary=response["summary"],
                     )
                     self.stdout.write(
                         self.style.SUCCESS(f"Summary generated for hotel: {hotel.name}")
                     )
                 except Exception as e:
-                    self.stderr.write(f"Error saving summary for hotel: {hotel.name}. Error: {e}")
+                    self.stderr.write(
+                        f"Error saving summary for hotel: {hotel.name}. Error: {e}"
+                    )
             else:
                 self.stderr.write(f"Failed to generate summary for hotel: {hotel.name}")

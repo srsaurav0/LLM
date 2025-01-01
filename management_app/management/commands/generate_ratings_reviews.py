@@ -2,8 +2,9 @@ from django.core.management.base import BaseCommand
 from management_app.models import NewHotel, HotelRatingReview
 from management_app.utils import query_gemini_ratings_reviews
 
+
 class Command(BaseCommand):
-    help = 'Generate ratings and reviews for hotels'
+    help = "Generate ratings and reviews for hotels"
 
     def handle(self, *args, **kwargs):
         hotels = NewHotel.objects.all()
@@ -22,19 +23,29 @@ class Command(BaseCommand):
             # Query the Gemini API
             response = query_gemini_ratings_reviews(prompt)
 
-            if response and response.get("rating") is not None and response.get("review"):
+            if (
+                response
+                and response.get("rating") is not None
+                and response.get("review")
+            ):
                 try:
                     # Save the new rating and review in the database
                     HotelRatingReview.objects.create(
                         hotel=hotel,
                         property_id=hotel.property_id,
                         rating=response["rating"],
-                        review=response["review"]
+                        review=response["review"],
                     )
                     self.stdout.write(
-                        self.style.SUCCESS(f"Rating and review generated for hotel: {hotel.name}")
+                        self.style.SUCCESS(
+                            f"Rating and review generated for hotel: {hotel.name}"
+                        )
                     )
                 except Exception as e:
-                    self.stderr.write(f"Error saving rating/review for hotel: {hotel.name}. Error: {e}")
+                    self.stderr.write(
+                        f"Error saving rating/review for hotel: {hotel.name}. Error: {e}"
+                    )
             else:
-                self.stderr.write(f"Failed to generate rating/review for hotel: {hotel.name}")
+                self.stderr.write(
+                    f"Failed to generate rating/review for hotel: {hotel.name}"
+                )
