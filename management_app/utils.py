@@ -75,7 +75,6 @@ def query_gemini_summary(prompt):
         time.sleep(2)  # Add delay to avoid hitting API rate limits
         response = requests.post(url, json=payload, headers=headers)
         print(response.json())
-        print("Hello")
         if response.status_code == 200:
             data = response.json()
 
