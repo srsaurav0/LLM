@@ -78,7 +78,9 @@ class ModelsTestCase(TestCase):
 
         # Manually delete related records before deleting the NewHotel instance
         HotelSummary.objects.filter(property_id=self.new_hotel.property_id).delete()
-        HotelRatingReview.objects.filter(property_id=self.new_hotel.property_id).delete()
+        HotelRatingReview.objects.filter(
+            property_id=self.new_hotel.property_id
+        ).delete()
 
         # Delete the NewHotel instance
         self.new_hotel.delete()
@@ -89,6 +91,7 @@ class ModelsTestCase(TestCase):
         # Verify that related HotelSummary and HotelRatingReview instances are also deleted
         self.assertFalse(HotelSummary.objects.filter(property_id=214).exists())
         self.assertFalse(HotelRatingReview.objects.filter(property_id=214).exists())
+
 
 class TestGeminiUtils(TestCase):
     @patch("management_app.utils.requests.post")

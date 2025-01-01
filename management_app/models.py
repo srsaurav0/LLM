@@ -61,7 +61,9 @@ class HotelSummary(models.Model):
 class HotelRatingReview(models.Model):
     id = models.AutoField(primary_key=True)  # Auto-incremented primary key
     property_id = models.IntegerField()  # Stores the ID of the related property
-    rating = models.DecimalField(max_digits=3, decimal_places=2)  # Stores the rating (0.00 to 999.99)
+    rating = models.DecimalField(
+        max_digits=3, decimal_places=2
+    )  # Stores the rating (0.00 to 999.99)
     review = models.TextField()  # Stores the review text
 
     class Meta:
