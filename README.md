@@ -69,3 +69,5 @@ Servers > LLM >
 
 docker exec -it django_web python manage.py test
 
+docker exec -it django_web coverage run manage.py test
+docker exec -it django_web coverage report
