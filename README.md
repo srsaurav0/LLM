@@ -156,14 +156,17 @@ A custom delay of 2 seconds is set before each query to avoid violating the quot
   ```bash
   docker exec -it django_web python manage.py rewrite_hotels
   ```
+  - Executing this command will also print the respons.json() fetched from the API call in the terminal. To stop this, go to file ***LLM/management_app/utils.py*** and comment ***line 24*** `print(response.json())`.
 - **Generate Summary of hotels in hotel_summaries table:**
   ```bash
   docker exec -it django_web python manage.py generate_summaries
   ```
+  - Executing this command will also print the respons.json() fetched from the API call in the terminal. To stop this, go to file ***LLM/management_app/utils.py*** and comment ***line 77*** `print(response.json())`.
 - **Generate Ratings and Reviews of the hotels in new_hotels table:**
   ```bash
   docker exec -it django_web python manage.py generate_ratings_reviews
   ```
+  - Executing this command will also print the respons.json() fetched from the API call in the terminal. To stop this, go to file ***LLM/management_app/utils.py*** and comment ***line 116*** `print(response.json())`.
 
 ### **2. Analyze the Data**
 - **Using Django Admin**:
