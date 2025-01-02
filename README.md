@@ -1,4 +1,4 @@
-# Property Management System
+# Property Management System (Django CLI and LLM)
 
 ## Table of Contents
 1. [Overview](#overview)
