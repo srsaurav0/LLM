@@ -14,7 +14,7 @@
 ---
 
 ## Overview
-This project is a **Property Management System** designed to manage hotels, their summaries, ratings, and reviews. The project integrates Django for backend management and uses the **Gemini API** from Google AI Studio for generating hotel descriptions, summaries, and reviews. It is built with the following features:
+This project is a **Property Management System** designed to manage hotels, their summaries, ratings, and reviews. The project integrates **Django** for backend management and uses the **Gemini API** from Google AI Studio for generating hotel descriptions, summaries, and reviews. It also uses another repository to scrape data from the [Trip.com](https://uk.trip.com/hotels/?locale=en-GB&curr=GBP) website. It is built with the following features:
 
 - Management of hotels and their details.
 - AI-generated summaries, ratings, and reviews.
