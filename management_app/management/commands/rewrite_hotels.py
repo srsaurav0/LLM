@@ -16,9 +16,17 @@ class Command(BaseCommand):
             response = query_gemini_api(prompt)
 
             if response:
-                hotel.name = response.get("name", hotel.name)
-                hotel.description = response.get("description", hotel.description)
-                hotel.save()
+                try:
+                    hotel.name = response.get("name", hotel.name)
+                    hotel.description = response.get("description", hotel.description)
+                    hotel.save()
+                    self.stdout.write(
+                        self.style.SUCCESS(f"Name and Description generated for hotel: {hotel.name}")
+                    )
+                except Exception as e:
+                    self.stderr.write(
+                        f"Error saving name and description for hotel: {hotel.name}. Error: {e}"
+                    )
 
         self.stdout.write(self.style.SUCCESS("Hotel names and descriptions updated!"))
         # time.sleep(5)
