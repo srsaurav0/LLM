@@ -4,26 +4,12 @@
 1. [Overview](#overview)
 2. [Features](#features)
 3. [Requirements](#requirements)
-   - [System Requirements](#system-requirements)
-   - [Python Packages](#python-packages)
 4. [Setup Instructions](#setup-instructions)
-   - [Clone the Repository](#1-clone-the-repository)
-   - [Set Up Environment Variables](#2-set-up-environment-variables)
-   - [Build and Start Docker Containers](#3-build-and-start-docker-containers)
-   - [Apply Migrations](#4-apply-migrations)
-   - [Create Superuser](#5-create-superuser)
 5. [Usage](#usage)
-   - [Django Admin](#1-django-admin)
-   - [Management Commands](#2-management-commands)
 6. [Project Structure](#project-structure)
 7. [Testing](#testing)
-   - [Test Coverage](#test-coverage)
 8. [API Integration](#api-integration)
-   - [Gemini API Key](#1-gemini-api-key)
-   - [Util Functions](#2-util-functions)
 9. [Known Issues and Troubleshooting](#known-issues-and-troubleshooting)
-10. [Contribution Guidelines](#contribution-guidelines)
-11. [License](#license)
 
 ---
 
@@ -258,10 +244,7 @@ docker exec -it django_web coverage report
 
 ## API Integration
 
-### **1. Gemini API Key**
-Ensure your API key is set in the `.env` file as `GEMINI_API_KEY`.
-
-### **2. Util Functions**
+### **Utility Functions**
 - **query_gemini_api**: Generates names and descriptions.
 - **query_gemini_summary**: Generates hotel summaries.
 - **query_gemini_ratings_reviews**: Generates ratings and reviews.
@@ -274,7 +257,7 @@ These are defined in `management_app/utils.py`.
 
 1. **Django Admin Not Accessible**:
    - Ensure the `django_web` container is running.
-   - Check if port `8000` is exposed in `docker-compose.yml`.
+   - Check if port `8000` is exposed in `docker-compose.yml`. Use command `docker ps` to list all the running containers and their respective ports.
 
 2. **API Rate Limits**:
    - Add delays between API calls in management commands to avoid hitting rate limits.
